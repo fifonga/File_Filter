@@ -2,62 +2,65 @@ import java.io.File;
 import java.util.Scanner;
 import java.io.*;
 
-/*
-* In - два или более файла с разными типами строк
-* Out - 3 файла, в которых отсартированы все строки по типам
-*/
-
 public class Main {
     // regular
     static String isInt = "[+-]?\\d+"; // int
     static String isString = "[а-яА-Яa-zA-Z][^.0-9\\r\\n]+.[\\D](?![\\r\\n])"; // string
     static String isFloat = "[+-]?\\d+\\.\\d+([eE][+-]?\\d+)?"; // float
 
+    // writes
+    static PrintWriter intWriter;
+    static PrintWriter floatWriter;
+    static PrintWriter stringWriter;
+
+    // file name
+    static File integers = new File("integers.txt");
+    static File floats = new File("floats.txt");
+    static File strings = new File("strings.txt");
+
     // main function
     public static void main(String[] args) throws IOException {
         Scanner inputScanner = new Scanner(System.in);
         System.out.println("enter file path:");
-        String filePath = inputScanner.nextLine();
-        System.out.println("enter out file path(Press Enter to save here):");
-        String pathOut = inputScanner.nextLine();
-        var file = new File(filePath);
+        File file = new File(inputScanner.nextLine());
 
-        if (pathOut.isEmpty()) {
-            pathOut = System.getProperty("user.dir") + File.separator;
-        }
+        toggleFileWriterMode(false);
 
         Scanner scanner = new Scanner(file);
-        while (scanner.hasNextLine()){
-            checkAndWriteLine(scanner.nextLine(), pathOut);
+
+        while (scanner.hasNextLine()) {
+            checkAndWriteLine(scanner.nextLine());
         }
 
         scanner.close();
-
     }
 
     // Check the string and write it to a file
-    public static String checkAndWriteLine(String line, String pathOut) throws IOException {
+    public static void checkAndWriteLine(String line) {
 
-        FileWriter intWriter = new FileWriter(pathOut + "integers.txt", true);
-        FileWriter floatWriter = new FileWriter(pathOut + "floats.txt", true);
-        FileWriter stringWriter = new FileWriter(pathOut + "strings.txt", true);
-
-        if(line.matches(isInt))
-        {
+        if (line.matches(isInt)) {
             intWriter.append(line).append("\n");
-            intWriter.close();
+            intWriter.flush();
         }
-        if (line.matches(isFloat))
-        {
+        if (line.matches(isFloat)) {
             floatWriter.append(line).append("\n");
-            floatWriter.close();;
+            floatWriter.flush();
         }
-        if(line.matches(isString))
-        {
+        if (line.matches(isString)) {
             stringWriter.append(line).append("\n");
-            stringWriter.close();;
+            stringWriter.flush();
         }
-        return "";
+
     }
 
+    // true - add, false - new file
+    public static void toggleFileWriterMode(boolean appendMode) {
+        try {
+            intWriter = new PrintWriter(new FileWriter(integers, appendMode));
+            floatWriter = new PrintWriter(new FileWriter(floats, appendMode));
+            stringWriter = new PrintWriter(new FileWriter(strings, appendMode));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
