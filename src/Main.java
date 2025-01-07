@@ -18,6 +18,10 @@ public class Main {
     static File floats = new File("floats.txt");
     static File strings = new File("strings.txt");
 
+    static int countInt = 0;
+    static int countString = 0;
+    static int countFloat = 0;
+
     // main function
     public static void main(String[] args) throws IOException {
         Scanner inputScanner = new Scanner(System.in);
@@ -33,6 +37,12 @@ public class Main {
         }
 
         scanner.close();
+
+        fileDeleter(countInt, integers, intWriter);
+        fileDeleter(countFloat, floats, floatWriter);
+        fileDeleter(countString, strings, stringWriter);
+
+        showStatistic();
     }
 
     // Check the string and write it to a file
@@ -40,14 +50,17 @@ public class Main {
 
         if (line.matches(isInt)) {
             intWriter.append(line).append("\n");
+            countInt++;
             intWriter.flush();
         }
         if (line.matches(isFloat)) {
             floatWriter.append(line).append("\n");
+            countFloat++;
             floatWriter.flush();
         }
         if (line.matches(isString)) {
             stringWriter.append(line).append("\n");
+            countString++;
             stringWriter.flush();
         }
 
@@ -62,5 +75,19 @@ public class Main {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    // delete file if empty
+    public static void fileDeleter(int count, File file, PrintWriter writer){
+        if (count == 0){
+            writer.close();
+            file.delete();
+        }
+    }
+
+    public static void showStatistic(){
+        System.out.println("Count integer:\t" + countInt);
+        System.out.println("Count float:\t" + countFloat);
+        System.out.println("Count string:\t" + countString);
     }
 }
