@@ -7,6 +7,11 @@ import java.util.Scanner;
 import java.io.*;
 
 public class Main {
+    // Statistics
+    static Statistics statInt = new StatisticsForIntAndFloat();
+    static Statistics statFloat = new StatisticsForIntAndFloat();
+    static Statistics statString = new StatisticsForString();
+
     // regular
     static String isInt = "[+-]?\\d+"; // int
     static String isString = "[а-яА-Яa-zA-Z][^.0-9\\r\\n]+.[\\D](?![\\r\\n])"; // string
@@ -30,34 +35,36 @@ public class Main {
 
     // main function
     public static void main(String[] args) throws IOException {
-        // Statistics
-        Statistics statInt = new StatisticsForIntAndFloat();
-        Statistics statFloat = new StatisticsForIntAndFloat();
-        Statistics statString = new StatisticsForString();
-
-        StatisticsForIntAndFloat statistics = new StatisticsForIntAndFloat();
 
         Scanner inputScanner = new Scanner(System.in);
         System.out.println("enter file path:");
         File file = new File(inputScanner.nextLine());
+        Scanner scanner = null;
+        try {
+            scanner = new Scanner(file);
+        } catch (FileNotFoundException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
 
         toggleFileWriterMode(false);
 
-        Scanner scanner = new Scanner(file);
+        try{
+            while (scanner.hasNextLine()) {
+                checkAndWriteLine(scanner.nextLine());
+            }
 
-        while (scanner.hasNextLine()) {
-            checkAndWriteLine(scanner.nextLine());
+            scanner.close();
+
+            fileDeleter(countInt, integers, intWriter);
+            fileDeleter(countFloat, floats, floatWriter);
+            fileDeleter(countString, strings, stringWriter);
+
+            statInt.collectStatistic(integers, true);
+            statFloat.collectStatistic(floats, true);
+            statString.collectStatistic(strings, true);
+        } catch (NullPointerException e) {
+            System.out.println("File is not exist");
         }
-
-        scanner.close();
-
-        fileDeleter(countInt, integers, intWriter);
-        fileDeleter(countFloat, floats, floatWriter);
-        fileDeleter(countString, strings, stringWriter);
-
-        statInt.collectStatistic(integers, true);
-        statFloat.collectStatistic(floats, true);
-        statString.collectStatistic(strings, true);
     }
 
     // Check the string and write it to a file
