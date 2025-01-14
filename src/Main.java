@@ -1,3 +1,7 @@
+import Statistic.NumericAndStringStatistic.StatisticsForIntAndFloat;
+import Statistic.NumericAndStringStatistic.StatisticsForString;
+import Statistic.Statistics;
+
 import java.io.File;
 import java.util.Scanner;
 import java.io.*;
@@ -22,8 +26,17 @@ public class Main {
     static int countString = 0;
     static int countFloat = 0;
 
+
+
     // main function
     public static void main(String[] args) throws IOException {
+        // Statistics
+        Statistics statInt = new StatisticsForIntAndFloat();
+        Statistics statFloat = new StatisticsForIntAndFloat();
+        Statistics statString = new StatisticsForString();
+
+        StatisticsForIntAndFloat statistics = new StatisticsForIntAndFloat();
+
         Scanner inputScanner = new Scanner(System.in);
         System.out.println("enter file path:");
         File file = new File(inputScanner.nextLine());
@@ -42,7 +55,9 @@ public class Main {
         fileDeleter(countFloat, floats, floatWriter);
         fileDeleter(countString, strings, stringWriter);
 
-        showStatistic();
+        statInt.collectStatistic(integers, true);
+        statFloat.collectStatistic(floats, true);
+        statString.collectStatistic(strings, true);
     }
 
     // Check the string and write it to a file
@@ -85,9 +100,4 @@ public class Main {
         }
     }
 
-    public static void showStatistic(){
-        System.out.println("Count integer:\t" + countInt);
-        System.out.println("Count float:\t" + countFloat);
-        System.out.println("Count string:\t" + countString);
-    }
 }
