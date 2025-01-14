@@ -1,4 +1,4 @@
-package data.FileManager;
+package FileManager;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -40,9 +40,6 @@ public class FileManager {
         return floatRegular;
     }
 
-    public boolean isToggleFileWriterMode() {
-        return toggleFileWriterMode;
-    }
 
     public PrintWriter getIntWriter() {
         return intWriter;
@@ -106,18 +103,24 @@ public class FileManager {
         }
     }
 
-    public void checkFile(){
+    public void DeleteEmptyFile(){
         if (countInt == 0){
             getIntWriter().close();
-            integers.delete();
+            if (integers.exists()) {
+                integers.delete();
+            }
         }
         if (countFloat == 0){
             getFloatWriter().close();
-            floats.delete();
+            if (floats.exists()) {
+                floats.delete();
+            }
         }
         if (countString == 0){
             getStringWriter().close();
-            strings.delete();
+            if (strings.exists()) {
+                strings.delete();
+            }
         }
     }
 }

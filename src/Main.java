@@ -1,7 +1,7 @@
 import Statistic.NumericAndStringStatistic.StatisticsForIntAndFloat;
 import Statistic.NumericAndStringStatistic.StatisticsForString;
 import Statistic.Statistics;
-import data.FileManager.FileManager;
+import FileManager.FileManager;
 
 import java.io.File;
 import java.util.Scanner;
@@ -12,34 +12,36 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
 
-        FileManager fileManager = new FileManager(false);
-        Statistics  statInt = new StatisticsForIntAndFloat(true);
-        Statistics  statFloat = new StatisticsForIntAndFloat(false);
-        Statistics  statString = new StatisticsForString(false);
+        while (true) {
+            FileManager fileManager = new FileManager(false);
+            Statistics statInt = new StatisticsForIntAndFloat(true);
+            Statistics statFloat = new StatisticsForIntAndFloat(true);
+            Statistics statString = new StatisticsForString(true);
 
-        Scanner inputScanner = new Scanner(System.in);
-        System.out.println("enter file path:");
-        File file = new File(inputScanner.nextLine());
-        Scanner scanner = null;
-        try {
-            scanner = new Scanner(file);
-        } catch (FileNotFoundException e) {
-            System.out.println("Error: " + e.getMessage());
-        }
+            System.out.println("enter file path:");
 
-        try {
-            while (scanner.hasNextLine()) {
-                fileManager.doFilter(scanner.nextLine());
+            Scanner readFiles  = new Scanner(System.in);
+            String files = readFiles .nextLine();
+            String[] split = files.split("\\s+");
+            for (String fileL : split){
+                File file = new File(fileL);
+                try(Scanner scanner = new Scanner(file)){
+                    while (scanner.hasNextLine()) {
+                        fileManager.doFilter(scanner.nextLine());
+                    }
+                } catch (FileNotFoundException e) {
+                    System.out.println("Error: " + e.getMessage());
+                    System.out.println("Make sure you entered the correct file name");
+                    System.exit(0);
+                }
             }
-            fileManager.checkFile();
 
-            // stats simple or full
+            fileManager.DeleteEmptyFile();
+
             statInt.collectStatistic(fileManager.getIntegers());
             statFloat.collectStatistic(fileManager.getFloats());
             statString.collectStatistic(fileManager.getStrings());
-            scanner.close();
-        } catch (NullPointerException e) {
-            System.out.println("File does not found");
+
         }
     }
 }
