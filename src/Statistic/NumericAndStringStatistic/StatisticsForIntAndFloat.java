@@ -8,12 +8,18 @@ import java.util.Scanner;
 
 public class StatisticsForIntAndFloat implements Statistics {
 
+    private boolean option;
+
     private double min = 10000000;
+
     private double max = -10000000;
     private  double summ = 0;
     private  long count = 0;
 
 
+    public StatisticsForIntAndFloat(boolean option){
+        this.option = option;
+    }
 
     public double getSumm() {
         return summ;
@@ -54,9 +60,9 @@ public class StatisticsForIntAndFloat implements Statistics {
 
 
     @Override
-    public void collectStatistic(File file, boolean option){
+    public void collectStatistic(File file){
 
-        if (file.exists()) {
+        if (file.exists() || getLineCount() != 0) {
             Scanner scanner = null;
             try {
                 scanner = new Scanner(file);

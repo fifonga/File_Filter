@@ -11,6 +11,11 @@ public class StatisticsForString implements Statistics {
     private  double min = 10000000;
     private  double max = -10000000;
     private long lineCount = 0;
+    private boolean option;
+
+    public StatisticsForString(boolean option) {
+        this.option = option;
+    }
 
     public double getMin() {
         return min;
@@ -46,8 +51,8 @@ public class StatisticsForString implements Statistics {
     }
 
 
-    public void collectStatistic(File file, boolean option) {
-        if (file.exists()) {
+    public void collectStatistic(File file) {
+        if (file.exists() || getLineCount() != 0) {
             Scanner scanner = null;
             try{
                 scanner = new Scanner(file);
