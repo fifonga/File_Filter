@@ -9,6 +9,7 @@ import java.util.Scanner;
 public class StatisticsForIntAndFloat implements Statistics {
 
     private boolean option;
+    private final boolean haveStatistic;
 
     private double min = 10000000;
 
@@ -17,8 +18,9 @@ public class StatisticsForIntAndFloat implements Statistics {
     private  long count = 0;
 
 
-    public StatisticsForIntAndFloat(boolean option){
+    public StatisticsForIntAndFloat(boolean option, boolean haveStatistic){
         this.option = option;
+        this.haveStatistic = haveStatistic;
     }
 
     public double getSumm() {
@@ -82,14 +84,16 @@ public class StatisticsForIntAndFloat implements Statistics {
                 }
             }
 
-            System.out.println("Statistic for" + file.getName());
-            System.out.println("Count of elements: "+ getLineCount());
-            if (option){
-                AdditionalStat();
+            if(haveStatistic) {
+                System.out.println("Statistic for" + file.getName());
+                System.out.println("Count of elements: " + getLineCount());
+                if (option) {
+                    AdditionalStat();
+                }
             }
-        }
-        else {
-            System.out.println("File not exist: " + file.getName());
+            else {
+                System.out.println("File not exist: " + file.getName());
+            }
         }
     }
 
@@ -97,12 +101,9 @@ public class StatisticsForIntAndFloat implements Statistics {
 
     public void AdditionalStat(){
         System.out.println("\t└─ Additional details");
-        System.out.println("\t\t├──Minimum: " + getMin());
-        System.out.println("\t\t├──Maximum: " + getMax());
-        System.out.println("\t\t├──Summ: " + summ);
-        System.out.println("\t\t└──Average: " + summ/getLineCount());
+        System.out.println("\t\t├──Minimum:\t" + getMin());
+        System.out.println("\t\t├──Maximum:\t" + getMax());
+        System.out.println("\t\t├──Summ:\t" + summ);
+        System.out.println("\t\t└──Average:\t" + summ/getLineCount());
     }
-
-
-
 }

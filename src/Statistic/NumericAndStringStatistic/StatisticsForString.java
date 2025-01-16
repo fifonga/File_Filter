@@ -12,9 +12,12 @@ public class StatisticsForString implements Statistics {
     private  double max = -10000000;
     private long lineCount = 0;
     private boolean option;
+    private final boolean haveStatistic;
 
-    public StatisticsForString(boolean option) {
+
+    public StatisticsForString(boolean option, boolean haveStatistic) {
         this.option = option;
+        this.haveStatistic = haveStatistic;
     }
 
     public double getMin() {
@@ -71,10 +74,14 @@ public class StatisticsForString implements Statistics {
                 }
             }
 
-            System.out.println("Statistic for" + file.getName());
-            System.out.println("Count of elements: "+ getLineCount());
-            if (option) {
-                AdditionalStat();
+            if (haveStatistic) {
+                System.out.println("Statistic for" + file.getName());
+                System.out.println("Count of elements: " + getLineCount());
+                if (option) {
+                    AdditionalStat();
+                }
+            } else {
+                System.out.println("File not exist: " + file.getName());
             }
         }
 
@@ -82,7 +89,7 @@ public class StatisticsForString implements Statistics {
 
     public void AdditionalStat(){
         System.out.println("\t└─ Additional details");
-        System.out.println("\t\t├──Minimum: " + getMin());
-        System.out.println("\t\t├──Maximum: " + getMax());
+        System.out.println("\t\t├──Minimum:\t" + getMin());
+        System.out.println("\t\t└──Maximum:\t" + getMax());
     }
 }

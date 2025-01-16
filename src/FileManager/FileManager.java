@@ -1,9 +1,7 @@
 package FileManager;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
+import java.util.Scanner;
 
 public class FileManager {
     // regular
@@ -24,9 +22,9 @@ public class FileManager {
     private final PrintWriter floatWriter;
     private final PrintWriter stringWriter;
 
-    private File integers = new File("integers.txt");
-    private File floats = new File("floats.txt");
-    private File strings = new File("strings.txt");
+
+    private String outPath;
+    private String prefix;
 
     public String getIntRegular() {
         return intRegular;
@@ -65,19 +63,23 @@ public class FileManager {
         return strings;
     }
 
-    public FileManager(boolean ToggleFileWriterMode) {
+    public FileManager(boolean ToggleFileWriterMode, String path, String prefix) {
         this.ToggleFileWriterMode = ToggleFileWriterMode;
+        this.outPath = path;
+        this.prefix = prefix;
+
+        String separator = String.valueOf(File.separatorChar);
 
         try {
-            if (!integers.exists()) {
-                integers.createNewFile();
-            }
-            if (!floats.exists()) {
-                floats.createNewFile();
-            }
-            if (!strings.exists()) {
-                strings.createNewFile();
-            }
+
+            String intFile = path + separator + prefix + "integers.txt";
+            String floatFile = path + separator + prefix + "floats.txt";
+            String strFile = path + separator + prefix + "strings.txt";
+
+            // Файлы для каждого типа строки
+            integers = new File(intFile);
+            floats = new File(floatFile);
+            strings = new File(strFile);
 
             intWriter = new PrintWriter(new FileWriter(integers, this.ToggleFileWriterMode));
             floatWriter = new PrintWriter(new FileWriter(floats, this.ToggleFileWriterMode));
@@ -86,6 +88,14 @@ public class FileManager {
             throw new RuntimeException(e);
         }
     }
+
+    String intFile = outPath + prefix + "integers.txt";
+    String floatFile = outPath + prefix + "floats.txt";
+    String stringFile = outPath + prefix + "strings.txt";
+
+    private File integers = new File(intFile);
+    private File floats = new File(floatFile);
+    private File strings = new File(stringFile);
 
     // recording files and collecting statistics
     public void doFilter(String line){
@@ -100,6 +110,17 @@ public class FileManager {
         if (line.matches(getStringRegular())){
             countString++;
             getStringWriter().append(line).append('\n').flush();
+        }
+    }
+
+    public void doFilterFile(File file) {
+        try(Scanner scanner = new Scanner(file)){
+            while (scanner.hasNextLine()) {
+                doFilter(scanner.nextLine());
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("Error: File not found: " + e.getMessage());
+            System.exit(1);
         }
     }
 

@@ -1,10 +1,10 @@
+import FlagManager.FlagManager;
 import Statistic.NumericAndStringStatistic.StatisticsForIntAndFloat;
 import Statistic.NumericAndStringStatistic.StatisticsForString;
 import Statistic.Statistics;
 import FileManager.FileManager;
 
 import java.io.File;
-import java.util.Scanner;
 import java.io.*;
 
 public class Main {
@@ -12,36 +12,23 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
 
-        while (true) {
-            FileManager fileManager = new FileManager(false);
-            Statistics statInt = new StatisticsForIntAndFloat(true);
-            Statistics statFloat = new StatisticsForIntAndFloat(true);
-            Statistics statString = new StatisticsForString(true);
+        FlagManager flagManager = new FlagManager();
 
-            System.out.println("enter file path:");
+        flagManager.getUserInput();
 
-            Scanner readFiles  = new Scanner(System.in);
-            String files = readFiles .nextLine();
-            String[] split = files.split("\\s+");
-            for (String fileL : split){
-                File file = new File(fileL);
-                try(Scanner scanner = new Scanner(file)){
-                    while (scanner.hasNextLine()) {
-                        fileManager.doFilter(scanner.nextLine());
-                    }
-                } catch (FileNotFoundException e) {
-                    System.out.println("Error: " + e.getMessage());
-                    System.out.println("Make sure you entered the correct file name");
-                    System.exit(0);
-                }
-            }
+        FileManager fileManager = new FileManager(false, flagManager.getOutputPath(), flagManager.getPrefix());
+        Statistics statInt = new StatisticsForIntAndFloat(flagManager.isFullStatistic(), flagManager.isHaveStatistic());
+        Statistics statFloat = new StatisticsForIntAndFloat(flagManager.isFullStatistic(),flagManager.isHaveStatistic());
+        Statistics statString = new StatisticsForString(flagManager.isFullStatistic(), flagManager.isHaveStatistic());
 
-            fileManager.DeleteEmptyFile();
-
-            statInt.collectStatistic(fileManager.getIntegers());
-            statFloat.collectStatistic(fileManager.getFloats());
-            statString.collectStatistic(fileManager.getStrings());
-
+        for (String file : flagManager.getFiles()){
+            fileManager.doFilterFile(new File(file));
         }
+
+        fileManager.DeleteEmptyFile();
+
+        statInt.collectStatistic(fileManager.getIntegers());
+        statFloat.collectStatistic(fileManager.getFloats());
+        statString.collectStatistic(fileManager.getStrings());
     }
 }
